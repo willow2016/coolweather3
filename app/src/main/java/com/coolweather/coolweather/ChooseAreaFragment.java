@@ -2,8 +2,10 @@ package com.coolweather.coolweather;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.telecom.Call;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import com.coolweather.coolweather.db.City;
 import com.coolweather.coolweather.db.County;
 import com.coolweather.coolweather.db.Province;
+import com.coolweather.coolweather.gson.Weather;
 import com.coolweather.coolweather.util.HttpUtil;
 import com.coolweather.coolweather.util.Utility;
 
@@ -104,6 +107,21 @@ public class ChooseAreaFragment extends Fragment {
                 } else if (currentLevel == LEVEL_CITY){
                     selectedCity = cityList.get(position);
                     queryCounties();
+                } else if (currentLevel == LEVEL_COUNTY){
+                    String weatherId = countyList.get(position).getWeatherId();
+                    Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                    intent.putExtra("weather_id",weatherId);
+
+                    Log.d("1_weatherId", weatherId);
+
+                    startActivity(intent);
+
+                    Log.d("2_weatherId", weatherId);
+
+                    getActivity().finish();
+
+                    Log.d("3_weatherId", weatherId);
+
                 }
             }
         });
@@ -235,52 +253,6 @@ public class ChooseAreaFragment extends Fragment {
 
                }
            }
-
-
-
-//            {
-//            @@Override
-//            public void onResponse (okhttp3.Call call, Response response) throws IOException{
-//            String responseText = response.body().string();
-//            boolean result = false;
-//            if ("province".equals(type)){
-//                result = Utility.handleProvinceResponse(responseText);
-//            } else if ("city".equals(type)){
-//                result = Utility.handleCityResponse(responseText,selectedProvince.getId());
-//            } else if ("county".equals(type)){
-//                result = Utility.handleCountyResponse(responseText,selectedCity.getId());
-//            }
-//            if (result){
-//                getActivity().runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run(){
-//                        closeProgressDialog();
-//                        if ("province".equals(type)){
-//                            queryProvinces();
-//                        } else if ("city".equals(type)){
-//                            queryCities();
-//                        } else if ("county".equals(type)){
-//                            queryCounties();
-//                        }
-//                    }
-//                });
-//            }
-//
-//        }
-
-//        @Override
-//                public void onFailure (Call call, IOException e){
-//            //通过runOnUiThread()方法回到主线程处理逻辑
-//            getActivity().runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    closeProgressDialog();
-//                    Toast.makeText(getContext(),"加载失败",Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//
-//        }
-//            }
         );
         }
     /*
